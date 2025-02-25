@@ -1,7 +1,7 @@
 const express = require("express");
 const sqlite3 = require("better-sqlite3"); // Alterado para better-sqlite3
 const cors = require("cors");
-const bcrypt = require("bcrypt");
+const bcrypt = require("bcryptjs");
 const path = require("path");
 const jwt = require("jsonwebtoken");
 
