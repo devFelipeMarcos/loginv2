@@ -1,16 +1,30 @@
 const express = require("express");
-const sqlite3 = require("better-sqlite3"); // Alterado para better-sqlite3
-const cors = require("cors");
 const bcrypt = require("bcryptjs");
+const cors = require("cors");
 const path = require("path");
 const jwt = require("jsonwebtoken");
+const fs = require("fs");
 
 const app = express();
 const saltRounds = 10;
 const JWT_SECRET = "seu-segredo-aqui"; // Em produção, utilize variável de ambiente para o segredo
 
-// Inicializando o banco de dados SQLite
-const db = new sqlite3("./users.db", { verbose: console.log }); // Alterado para better-sqlite3
+// Caminho para o arquivo JSON de usuários
+const usersFilePath = path.join(__dirname, "users.json");
+
+// Função para ler os dados de usuários do arquivo JSON
+const readUsersFromFile = () => {
+  if (!fs.existsSync(usersFilePath)) {
+    return [];
+  }
+  const data = fs.readFileSync(usersFilePath);
+  return JSON.parse(data);
+};
+
+// Função para escrever os dados de usuários no arquivo JSON
+const writeUsersToFile = (users) => {
+  fs.writeFileSync(usersFilePath, JSON.stringify(users, null, 2));
+};
 
 // Configuração de middleware
 app.use(express.json());
@@ -22,18 +36,6 @@ app.use(
     allowedHeaders: ["Content-Type", "Authorization"],
   })
 );
-
-// Criação da tabela de usuários, se não existir
-db.prepare(
-  `
-  CREATE TABLE IF NOT EXISTS users (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    username TEXT UNIQUE NOT NULL,
-    password_hash TEXT NOT NULL,
-    created_at DATETIME DEFAULT CURRENT_TIMESTAMP
-  )
-`
-).run();
 
 // Middleware de autenticação via JWT
 const authenticateUser = (req, res, next) => {
@@ -69,15 +71,31 @@ app.post("/register", async (req, res) => {
 
     const hashedPassword = await bcrypt.hash(password, saltRounds);
 
-    const stmt = db.prepare(
-      "INSERT INTO users (username, password_hash) VALUES (?, ?)"
-    );
-    const info = stmt.run(username, hashedPassword);
+    // Carrega os usuários do arquivo JSON
+    const users = readUsersFromFile();
+
+    // Verifica se o username já existe
+    if (users.some((user) => user.username === username)) {
+      return res.status(400).json({ error: "Usuário já existe" });
+    }
+
+    const newUser = {
+      id: users.length + 1,
+      username,
+      password_hash: hashedPassword,
+      created_at: new Date().toISOString(),
+    };
+
+    // Adiciona o novo usuário à lista
+    users.push(newUser);
+
+    // Salva os usuários de volta no arquivo JSON
+    writeUsersToFile(users);
 
     res.status(201).json({
       success: true,
       message: "Usuário cadastrado com sucesso!",
-      userId: info.lastInsertRowid,
+      userId: newUser.id,
     });
   } catch (error) {
     res.status(500).json({ error: "Erro interno do servidor" });
@@ -93,8 +111,11 @@ app.post("/login", async (req, res) => {
       return res.status(400).json({ error: "Dados incompletos" });
     }
 
-    const stmt = db.prepare("SELECT * FROM users WHERE username = ?");
-    const user = stmt.get(username);
+    // Carrega os usuários do arquivo JSON
+    const users = readUsersFromFile();
+
+    // Encontra o usuário pelo username
+    const user = users.find((user) => user.username === username);
 
     if (!user) {
       return res.status(401).json({ error: "Credenciais inválidas" });
