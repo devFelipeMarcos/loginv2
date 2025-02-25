@@ -7,11 +7,10 @@ async function login(event) {
   const password = document.getElementById("password").value;
 
   try {
-    const response = await fetch(`${API_URL}/login`, {
+    const response = await fetch("https://loginv2.onrender.com/login", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        Accept: "application/json",
       },
       body: JSON.stringify({ username, password }),
     });
@@ -47,11 +46,10 @@ async function register(event) {
   }
 
   try {
-    const response = await fetch(`${API_URL}/register`, {
+    const response = await fetch("https://loginv2.onrender.com/register", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        Accept: "application/json",
       },
       body: JSON.stringify({ username, password }),
     });

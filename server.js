@@ -31,7 +31,7 @@ app.use(express.json());
 app.use(express.static(path.join(__dirname, "public")));
 app.use(
   cors({
-    origin: "http://localhost:5500", // Altere para a URL do seu front-end conforme necessário
+    origin: "https://loginv2.onrender.com", // Alterado para o domínio correto do front-end
     methods: ["GET", "POST"],
     allowedHeaders: ["Content-Type", "Authorization"],
   })
