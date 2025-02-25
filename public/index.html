@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Tela de Login</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="container">
+      <!-- Coluna da ilustração -->
+      <div class="left">
+        <img src="capa.svg" alt="Ilustração" />
+      </div>
+
+      <!-- Formulário de Login -->
+      <div class="right login-form" style="display: block">
+        <h2>Login</h2>
+        <p>Seja bem vindo, faça login para continuar</p>
+
+        <form id="loginForm">
+          <div class="form-group">
+            <label for="username">Login</label>
+            <input
+              type="text"
+              id="username"
+              name="username"
+              placeholder="Digite seu nome de usuário"
+            />
+          </div>
+
+          <div class="form-group">
+            <label for="password">Senha</label>
+            <input
+              type="password"
+              id="password"
+              name="password"
+              placeholder="Digite sua senha"
+            />
+          </div>
+
+          <div class="options">
+            <div class="remember-me">
+              <input type="checkbox" id="remember" name="remember" />
+              <label for="remember">Relembre-me</label>
+            </div>
+            <a href="#">Esqueceu a senha?</a>
+          </div>
+
+          <button type="submit" class="login-btn">Log In</button>
+        </form>
+
+        <div id="loginMessage" class="message"></div>
+
+        <div class="social-login">
+          <a href="#" class="register-link"><p>Registre-se</p></a>
+        </div>
+      </div>
+
+      <!-- Formulário de Registro -->
+      <div class="right register-form" style="display: none">
+        <h2>Criar Conta</h2>
+        <p>Crie sua conta gratuitamente</p>
+
+        <form id="registerForm">
+          <div class="form-group">
+            <label for="name">Nome Completo</label>
+            <input
+              type="text"
+              id="name"
+              name="name"
+              placeholder="Digite seu nome completo"
+            />
+          </div>
+
+          <div class="form-group">
+            <label for="registerUser">Login</label>
+            <input
+              type="text"
+              id="registerUser"
+              name="username"
+              placeholder="Digite seu nome de usuário"
+            />
+          </div>
+
+          <div class="form-group">
+            <label for="registerPass">Senha</label>
+            <input
+              type="password"
+              id="registerPass"
+              name="password"
+              placeholder="Crie uma senha"
+            />
+          </div>
+
+          <div class="form-group">
+            <label for="confirm-password">Confirmar Senha</label>
+            <input
+              type="password"
+              id="confirm-password"
+              name="confirmPassword"
+              placeholder="Repita sua senha"
+            />
+          </div>
+
+          <button type="submit" class="login-btn">Registrar</button>
+        </form>
+
+        <div id="registerMessage" class="message"></div>
+
+        <div class="social-login">
+          <a href="#" class="back-to-login"><p>Já tem conta? Faça login</p></a>
+        </div>
+      </div>
+    </div>
+
+    <script src="script.js"></script>
+  </body>
+</html>
