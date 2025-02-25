@@ -1,4 +1,4 @@
-const API_URL = "http://localhost:1000";
+const API_URL = "http://localhost:10000";
 
 // Função de login
 async function login(event) {
